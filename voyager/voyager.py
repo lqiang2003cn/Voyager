@@ -4,7 +4,7 @@ import os
 import time
 from typing import Dict
 
-import voyager.utils as U
+import Voyager.voyager.utils as U
 from .env import VoyagerEnv
 
 from .agents import ActionAgent
@@ -16,38 +16,38 @@ from .agents import SkillManager
 # TODO: remove event memory
 class Voyager:
     def __init__(
-        self,
-        mc_port: int = None,
-        azure_login: Dict[str, str] = None,
-        server_port: int = 3000,
-        openai_api_key: str = None,
-        env_wait_ticks: int = 20,
-        env_request_timeout: int = 600,
-        max_iterations: int = 160,
-        reset_placed_if_failed: bool = False,
-        action_agent_model_name: str = "gpt-4",
-        action_agent_temperature: float = 0,
-        action_agent_task_max_retries: int = 4,
-        action_agent_show_chat_log: bool = True,
-        action_agent_show_execution_error: bool = True,
-        curriculum_agent_model_name: str = "gpt-4",
-        curriculum_agent_temperature: float = 0,
-        curriculum_agent_qa_model_name: str = "gpt-3.5-turbo",
-        curriculum_agent_qa_temperature: float = 0,
-        curriculum_agent_warm_up: Dict[str, int] = None,
-        curriculum_agent_core_inventory_items: str = r".*_log|.*_planks|stick|crafting_table|furnace"
-        r"|cobblestone|dirt|coal|.*_pickaxe|.*_sword|.*_axe",
-        curriculum_agent_mode: str = "auto",
-        critic_agent_model_name: str = "gpt-4",
-        critic_agent_temperature: float = 0,
-        critic_agent_mode: str = "auto",
-        skill_manager_model_name: str = "gpt-3.5-turbo",
-        skill_manager_temperature: float = 0,
-        skill_manager_retrieval_top_k: int = 5,
-        openai_api_request_timeout: int = 240,
-        ckpt_dir: str = "ckpt",
-        skill_library_dir: str = None,
-        resume: bool = False,
+            self,
+            mc_port: int = None,
+            azure_login: Dict[str, str] = None,
+            server_port: int = 3000,
+            openai_api_key: str = None,
+            env_wait_ticks: int = 20,
+            env_request_timeout: int = 600,
+            max_iterations: int = 160,
+            reset_placed_if_failed: bool = False,
+            action_agent_model_name: str = "gpt-4",
+            action_agent_temperature: float = 0,
+            action_agent_task_max_retries: int = 4,
+            action_agent_show_chat_log: bool = True,
+            action_agent_show_execution_error: bool = True,
+            curriculum_agent_model_name: str = "gpt-4",
+            curriculum_agent_temperature: float = 0,
+            curriculum_agent_qa_model_name: str = "gpt-3.5-turbo",
+            curriculum_agent_qa_temperature: float = 0,
+            curriculum_agent_warm_up: Dict[str, int] = None,
+            curriculum_agent_core_inventory_items: str = r".*_log|.*_planks|stick|crafting_table|furnace"
+                                                         r"|cobblestone|dirt|coal|.*_pickaxe|.*_sword|.*_axe",
+            curriculum_agent_mode: str = "auto",
+            critic_agent_model_name: str = "gpt-4",
+            critic_agent_temperature: float = 0,
+            critic_agent_mode: str = "auto",
+            skill_manager_model_name: str = "gpt-3.5-turbo",
+            skill_manager_temperature: float = 0,
+            skill_manager_retrieval_top_k: int = 5,
+            openai_api_request_timeout: int = 240,
+            ckpt_dir: str = "ckpt",
+            skill_library_dir: str = None,
+            resume: bool = False,
     ):
         """
         The main class for Voyager.
@@ -244,8 +244,8 @@ class Voyager:
                 events[-1][1]["voxels"] = new_events[-1][1]["voxels"]
             new_skills = self.skill_manager.retrieve_skills(
                 query=self.context
-                + "\n\n"
-                + self.action_agent.summarize_chatlog(events)
+                      + "\n\n"
+                      + self.action_agent.summarize_chatlog(events)
             )
             system_message = self.action_agent.render_system_message(skills=new_skills)
             human_message = self.action_agent.render_human_message(
@@ -264,8 +264,8 @@ class Voyager:
         assert len(self.messages) == 2
         self.action_agent_rollout_num_iter += 1
         done = (
-            self.action_agent_rollout_num_iter >= self.action_agent_task_max_retries
-            or success
+                self.action_agent_rollout_num_iter >= self.action_agent_task_max_retries
+                or success
         )
         info = {
             "task": self.task,
@@ -274,7 +274,7 @@ class Voyager:
         }
         if success:
             assert (
-                "program_code" in parsed_result and "program_name" in parsed_result
+                    "program_code" in parsed_result and "program_name" in parsed_result
             ), "program and program_name must be returned when success"
             info["program_code"] = parsed_result["program_code"]
             info["program_name"] = parsed_result["program_name"]
@@ -409,3 +409,8 @@ class Voyager:
             print(
                 f"\033[35mFailed tasks: {', '.join(self.curriculum_agent.failed_tasks)}\033[0m"
             )
+
+
+if __name__ == "__main__":
+    v = Voyager()
+    v.learn()
