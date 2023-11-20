@@ -83,7 +83,7 @@ class ActionAgent:
             "smeltItem",
             "killMob",
         ]
-        if not self.llm.model_name == "gpt-3.5-turbo":
+        if not self.llm.model_name == "gpt-3.5-turbo-1106":
             base_skills += [
                 "useChest",
                 "mineflayer",
